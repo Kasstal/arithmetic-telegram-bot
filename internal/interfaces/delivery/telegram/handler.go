@@ -62,7 +62,7 @@ func (h *TelegramHandler) HandleStartCommand(c telebot.Context) error {
 }
 
 func (h *TelegramHandler) HandleHelpCommand(c telebot.Context) error {
-	err := h.telegramClient.SendMessage(c.Chat().ID, "Я умею вычислять простые арифметические выражения. Поддерживаю `+`, `-`, `*`, `/` и скобки. Пример: `(10 + 5) / 3`")
+	err := h.telegramClient.SendMessage(c.Chat().ID, "Я умею вычислять арифметические выражения с операторами: `+`, `-`, `/`, `*`, `&`, `|`, `^`, `**`, `%`, `>>`, `<<` и скобками. Пример: `(10 + 5) / 3`, `2 ** 3`, `5 & 3`")
 	if err != nil {
 		log.Printf("Failed to send help message: %v", err)
 		return err
