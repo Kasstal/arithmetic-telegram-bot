@@ -19,7 +19,7 @@ func (e *GoEvaluator) Evaluate(expr domain.Expression) (domain.Answer, error) {
 				Err:     err,
 			}
 		}
-	}
+
 		return 0, &domain.CalculatorError{
 			Type:    domain.ErrorTypeUnknown,
 			Message: "Unknown error during expression evaluation",
@@ -42,15 +42,14 @@ func (e *GoEvaluator) Evaluate(expr domain.Expression) (domain.Answer, error) {
 			Message: "Unknown error during expression evaluation",
 			Err:     err,
 		}
+	}
+	if floatResult, ok := result.(float64); ok {
+		return domain.Answer(floatResult), nil
+	}
 
-		if floatResult, ok := result.(float64); ok {
-			return domain.Answer(floatResult), nil
-		}
-
-		return 0, &domain.CalculatorError{
-			Type:    domain.ErrorTypeUnknown,
-			Message: "Unexpected result type",
-			Err:     nil,
+	return 0, &domain.CalculatorError{
+		Type:    domain.ErrorTypeUnknown,
+		Message: "Unexpected result type",
+		Err:     nil,
 	}
 }
-
