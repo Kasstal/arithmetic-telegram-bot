@@ -40,7 +40,7 @@ func NewTelegramBot(token string, timeout time.Duration) (TelegramClient, error)
 
 }
 func (t *telegramBot) Start() {
-	log.Printf("Starting Telegram bot with token: %s", t.token)
+	log.Println("Starting Telegram bot.")
 	t.bot.Start()
 }
 

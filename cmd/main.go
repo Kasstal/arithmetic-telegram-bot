@@ -1,25 +1,35 @@
 package main
 
 import (
-  "fmt"
+	"arithmetic-telegram-bot/internal/app/usecase"
+	"arithmetic-telegram-bot/internal/config"
+	"arithmetic-telegram-bot/internal/infrastructure/evaluator"
+	telegramClient "arithmetic-telegram-bot/internal/infrastructure/telegram"
+	telegramHandler "arithmetic-telegram-bot/internal/interfaces/delivery/telegram"
+	"fmt"
 )
 
-//TIP To run your code, right-click the code and select <b>Run</b>. Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.
-
 func main() {
-  //TIP Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined or highlighted text
-  // to see how GoLand suggests fixing it.
-  s := "gopher"
-  fmt.Println("Hello and welcome, %s!", s)
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		fmt.Println("ошибка загрузки конфигурации:", err)
+		return
+	}
 
-  for i := 1; i <= 5; i++ {
-	//TIP You can try debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-	// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>. To start your debugging session, 
-	// right-click your code in the editor and select the <b>Debug</b> option. 
-	fmt.Println("i =", 100/i)
-  }
+	evaluatorRepo := evaluator.NewGoEvaluator()
+
+	calculatorSvc := usecase.NewCalculatorService(evaluatorRepo)
+
+	botClient, err := telegramClient.NewTelegramBot(cfg.BotToken, cfg.TimeOutPoller)
+	if err != nil {
+		fmt.Println("ошибка создания Telegram клиента:", err)
+		return
+	}
+	handler := telegramHandler.NewTelegramHandler(calculatorSvc, botClient)
+
+	botClient.RegisterHandler(telegramClient.OnText, handler.HandleMessage)
+	botClient.RegisterHandler("/start", handler.HandleStartCommand)
+	botClient.RegisterHandler("/help", handler.HandleHelpCommand)
+
+	botClient.Start()
 }
-
-//TIP See GoLand help at <a href="https://www.jetbrains.com/help/go/">jetbrains.com/help/go/</a>.
-// Also, you can try interactive lessons for GoLand by selecting 'Help | Learn IDE Features' from the main menu.
