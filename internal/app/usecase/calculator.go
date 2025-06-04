@@ -55,7 +55,6 @@ func (c *calculatorService) isCorrectExpression(expr string) bool {
 		}
 	}
 
-	// Additional checks can be added here (e.g., balanced parentheses, etc.)
 	return true
 }
 
