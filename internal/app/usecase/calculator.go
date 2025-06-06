@@ -62,7 +62,7 @@ func isValidCharacter(char rune) bool {
 	if (char >= '0' && char <= '9') ||
 		char == '+' || char == '-' ||
 		char == '*' || char == '/' ||
-		char == '%' ||
+		char == '%' || char == '.' ||
 		char == '(' || char == ')' ||
 		char == '&' || char == '|' ||
 		char == '^' ||
